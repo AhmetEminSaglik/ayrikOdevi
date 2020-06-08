@@ -3,8 +3,8 @@ package ayrikmatematik;
 import Logic.Action;
 import java.awt.Color;
 import java.awt.Cursor;
-import javafx.scene.layout.Border;
-import javax.swing.BorderFactory;
+import java.util.Random;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -13,7 +13,7 @@ public class TablePanel extends JPanel {
     public boolean DegerDegistir = true;
     JTextField txtMatris[][];
     //String matris[][];
-
+    JLabel panelBaslik;
     int satir, sutun;
     int leftSpace = 30, topSpace = 40;
     int txtWidth = 30, txtHeight = 20;
@@ -21,7 +21,7 @@ public class TablePanel extends JPanel {
     public Action action = new Action(this);
 
     public TablePanel(Frame frame, int x, int y, int JFrameWidth, int JFrameHeight) {
-
+        this.add(getPanelBaslik());
         //this.setBackground(new Color(116, 185, 255));
         //this.setBounds(x, y, JFrameWidth / 2, JFrameHeight / 2);
         this.setBounds(x, y, JFrameWidth, JFrameHeight);
@@ -33,12 +33,22 @@ public class TablePanel extends JPanel {
 //        JOptionPane.showMessageDialog(null, "");
     }
 
+    public void TablePanelMatrisOlusturSifirlaBastirma(int satir, int sutun) {
+        txtMatris = new JTextField[satir][sutun];
+        this.satir = satir;
+        this.sutun = sutun;
+
+        TabloSıfırla(txtMatris);
+
+    }
+
     public void TablePanelMatrisOlustur(int satir, int sutun) {
         txtMatris = new JTextField[satir][sutun];
         this.satir = satir;
         this.sutun = sutun;
 
         TabloSıfırla(txtMatris);
+
         TabloyuBastir();
     }
 
@@ -62,7 +72,12 @@ public class TablePanel extends JPanel {
 
                         tablo[i][j].setText(" ");
                     } else {
-                        tablo[i][j].setText(Integer.toString(0));
+                       // tablo[i][j].setText(Integer.toString(0));
+                      if (new Random().nextInt(3) > 1) {
+                            tablo[i][j].setText(Integer.toString(1));
+                        } else {
+                            tablo[i][j].setText(Integer.toString(0));
+                        }
                     }
                 }
                 if (i > 0 && j > 0) {
@@ -135,6 +150,19 @@ public class TablePanel extends JPanel {
 
     public void setTxtMatris(JTextField[][] txtMatris) {
         this.txtMatris = txtMatris;
+    }
+
+    public JLabel getPanelBaslik() {
+        if (panelBaslik == null) {
+            panelBaslik = new JLabel();
+            panelBaslik.setBounds(0, 0, 150, 30);
+
+        }
+        return panelBaslik;
+    }
+
+    public void setPanelBaslik(JLabel panelBaslik) {
+        this.panelBaslik = panelBaslik;
     }
 
 }

@@ -1,3 +1,4 @@
+
 package Logic;
 
 import ayrikmatematik.PanelDegerGirme;
@@ -126,6 +127,64 @@ public class Action implements ActionListener {
                 }
             }
         }
+    }
+    public void SutunSil(JTextField[][] guncelTablo, int silinecekSutun) { // silme işlemini null atayarak yapacam
+
+        double width, height; //x, y,
+        //  HataBastir("silinecek sutun : "+silinecekSutun);
+        AsilTablodasilinenSutunuBoya(silinecekSutun);//+ silinenSutun
+
+        for (int i = 0; i < guncelTablo.length; i++) {
+            for (int j = silinecekSutun; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {//guncelTablo[i].length - 1 - silinenSutun
+
+                if (j != guncelTablo[i].length + 1) {
+
+                    guncelTablo[i][j].setText(guncelTablo[i][j + 1].getText());
+                    width = guncelTablo[i][j + 1].getBounds().getWidth();
+                    height = guncelTablo[i][j + 1].getBounds().getHeight();
+
+                    guncelTablo[i][j].setSize((int) width, (int) height);
+
+                    if (j == DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 2) {//guncelTablo[i].length - 2 - silinenSutun
+                        guncelTablo[i][j + 1].setVisible(false);
+                        //     HataBastir("Silinen index -> i :" + i + " ; j:" + j);
+
+                    }
+
+                } else {
+                    HataBastir("TRUEEE");
+                    guncelTablo[i][j].setVisible(false);
+                }
+
+                /* if (j == guncelTablo[i].length) {
+
+                } else {
+                    HataBastir("j :" + j + " , yeri :" + (guncelTablo[i].length - silinenSutun));
+                }*/
+ /* if (j == guncelTablo[i].length - 2 - silinenSutun) {
+                    HataBastir("if te --> " + "hedef : j:" + j + " hesaplanabilen : " + (guncelTablo[i].length - 2 - silinenSutun));
+                    guncelTablo[i][j].setVisible(false);  //  HataBastir("if : uzunluk :" + guncelTablo[i].length + " j :" + j + "\n -(silinenSutun+2)" + (-silinenSutun - 2));
+                } else {
+                    HataBastir("hedef : j:" + j + " hesaplanabilen : " + (guncelTablo[i].length));
+                    //HataBastir("else uzunluk :" + guncelTablo[i].length + ": j :  " + j + "\n -(silinenSutun+2)" + (-silinenSutun - 2));
+                }*/
+            }
+
+        }
+
+        silinenSutun++;
+
+
+        /* for (int i = 0; i < guncelTablo.length; i++) {
+            guncelTablo[i][silinecekSutun].setText("-1");
+            guncelTablo[i][silinecekSutun].setVisible(false);
+        }*/
+
+ /* for (int i = 0; i < guncelTablo.length; i++) {
+            for (int j = 0; j < guncelTablo[i].length; j++) {
+                System.out.println(guncelTablo[i][j]);
+            }
+        }*/
     }
     
 }

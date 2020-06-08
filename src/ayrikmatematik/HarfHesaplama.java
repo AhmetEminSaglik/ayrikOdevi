@@ -12,7 +12,7 @@ public class HarfHesaplama {
     }
 
     public String SatiraYazilacak(int index) {
-        System.out.println("index -->" + index);
+     //   System.out.println("index -->" + index);
         String text = "";
         if (index < 26) {
             text += KarakterHesapla(index);
@@ -32,7 +32,7 @@ public class HarfHesaplama {
             text += KarakterHesapla(BirinciBasamak % 26);
 
         }*/
-        System.out.println("text : " + text);
+        //System.out.println("text : " + text);
         return text;
     }
 }

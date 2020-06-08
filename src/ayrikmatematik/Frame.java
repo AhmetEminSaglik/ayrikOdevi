@@ -39,19 +39,20 @@ public class Frame {
                 second[i][j].setText(first[i][j].getText());
             }
         }
-        System.out.println("kopyalama kontrol ");
+        /*  System.out.println("kopyalama kontrol ");
         for (int i = 0; i < first.length; i++) {
             for (int j = 0; j < first[i].length; j++) {
                 System.out.println("second[" + i + "][" + j + "]" + second[i][j].getText());
                 System.out.println("first[" + i + "][" + j + "]" + first[i][j].getText());
 
             }
-        }
+        }*/
 
         return second;
     }
 
     public void AddOtheTablesToFrame(JTextField dizi[][]) {
+
         getOncekiTable().TablePanelMatrisOlustur(dizi.length, dizi[0].length);
         getSuankiTable().TablePanelMatrisOlustur(dizi.length, dizi[0].length);
         TabloKopyalama(dizi, getOncekiTable().getTxtMatris());
@@ -59,7 +60,10 @@ public class Frame {
 
         getOncekiTable().DegerDegistir = false;
         getSuankiTable().DegerDegistir = false;
- 
+        getAsilTable().DegerDegistir = false;
+        getOncekiTable().getPanelBaslik().setText("Eski Tablo");
+        getSuankiTable().getPanelBaslik().setText("GüncelTablo");
+        getAsilTable().getPanelBaslik().setText("İlk Girilen Tablo");
         /*
         getOncekiTable().setVisible(false);
         getOncekiTable().TabloyuBastir();
