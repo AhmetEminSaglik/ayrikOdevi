@@ -1,15 +1,21 @@
 package ayrikmatematik;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Frame {
 
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    final double screenSizeWidth = screenSize.getWidth();
+    final double screenSizeHeight = screenSize.getHeight();
+
     JFrame jFrame;
     PanelDegerGirme pdg;
-    int width = 1050, height = 650;
+    //int width = (int) screenSizeWidth, height = (int) screenSizeHeight;
+    int width = (int) (screenSizeWidth * 0.951), height = (int) (screenSizeHeight * 0.872);
     TablePanel AsilTable;
     TablePanel OncekiTable;
     TablePanel SuankiTable;
@@ -27,9 +33,9 @@ public class Frame {
         getjFrame().add(getAsilTable());
         getjFrame().add(getSuankiTable());
         getjFrame().add(getOncekiTable());
-        getAsilTable().setBackground(Color.cyan);
+        getAsilTable().setBackground(new Color(85, 230, 193));
         getSuankiTable().setBackground(Color.ORANGE);
-        getOncekiTable().setBackground(Color.red);
+        getOncekiTable().setBackground(new Color(253, 114, 114));
 
     }
 
@@ -128,7 +134,7 @@ public class Frame {
             jFrame = new JFrame("Ayrik Matematik / Rota - Sezgizel Algoritma");
             jFrame.setLayout(null);
             jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            jFrame.setBounds(50, 25, width, height);
+            jFrame.setBounds(0, 0, width, height);
             jFrame.setResizable(false);
             AddPaneltoFrame();
             jFrame.setVisible(true);
