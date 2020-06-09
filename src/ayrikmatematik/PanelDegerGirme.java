@@ -178,7 +178,7 @@ public class PanelDegerGirme extends JPanel {
     public JLabel getLblKapsamalar() {
         if (lblKapsamalar == null) {
             lblKapsamalar = new JLabel("Kapsamalar = ");
-            lblKapsamalar.setBounds(spaceLeft, spaceTop + (lblHeight + spaceHeight) * 4 + btnHeight * 2 + spaceHeight, lblWidth, lblHeight);
+            lblKapsamalar.setBounds(spaceLeft, spaceTop + (lblHeight + spaceHeight) * 4 + btnHeight * 2 + spaceHeight, lblWidth*3, lblHeight);
 
         }
 

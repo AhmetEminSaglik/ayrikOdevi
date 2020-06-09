@@ -72,12 +72,12 @@ public class TablePanel extends JPanel {
 
                         tablo[i][j].setText(" ");
                     } else {
-                       // tablo[i][j].setText(Integer.toString(0));
-                      if (new Random().nextInt(3) > 1) {
+                        tablo[i][j].setText(Integer.toString(0));
+                      /*if (new Random().nextInt(3) > 1) {
                             tablo[i][j].setText(Integer.toString(1));
                         } else {
                             tablo[i][j].setText(Integer.toString(0));
-                        }
+                        }*/
                     }
                 }
                 if (i > 0 && j > 0) {

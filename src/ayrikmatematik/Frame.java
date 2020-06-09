@@ -129,7 +129,7 @@ public class Frame {
             jFrame.setLayout(null);
             jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             jFrame.setBounds(50, 25, width, height);
-
+            jFrame.setResizable(false);
             AddPaneltoFrame();
             jFrame.setVisible(true);
         }

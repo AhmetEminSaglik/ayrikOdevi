@@ -9,20 +9,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Action implements ActionListener, MouseListener {
 
+    boolean virgulEkle = false;
+    boolean GoToResultTiklanildi = false;
     Color SiliniyorArkaPlanRenk = Color.red;
     Color SilinmisArkaPlanRenk = Color.BLACK;
+    Color SilinmisinYaziRengi = Color.WHITE;
+    Color SiyahYaziRengi = Color.black;
     Color DusukSutunAgirligiRengi = new Color(52, 152, 219);
     Color IsaretliSutunlarinIsaretlenecekSatirRengi = new Color(243, 156, 18);
     Color KesisenIsaretliSutunVeSatirRengi = new Color(38, 222, 129);
-    Color oncedenBoyanmis;
+    Color oncedenBoyanmisArkaPlan;
+    Color oncedenBoyanmisYaziRengi;
     int silinenSatir = 0;
     int silinenSutun = 0;
-    boolean IslemYapıldı = true;
+    boolean IslemYapildi = true;
     int ClickCounter[] = new int[3];  // 0-> i için || j-> 1 içinn  ||  sayac -> 2  için
     final int MUTLAK_SATIR = 0, SATIR_KAPSAMA = 1, SUTUN_KAPSAMA = 2, SEZGIZSEL_ALGORITMA = 3;
     String btnNameNext = "ilerle";
@@ -50,19 +56,23 @@ public class Action implements ActionListener, MouseListener {
 
     }
 
+    public void AsamaBildirimi(String text) {
+        JOptionPane.showMessageDialog(null, text);
+    }
+
     public boolean InputIntegerControl(String InputTextforInteger) {
         try {
             if (Integer.parseInt(InputTextforInteger) > 26) {
                 throw new Exception();
             }
         } catch (NumberFormatException e) {
-            HataBastir("Lütfen N ve M değerlerine Tam Sayı giriniz");
+            HataBastir("Lütfen N ve M değerlerine Tam Sayi giriniz");
             return false;
         } catch (NullPointerException e) {
             HataBastir("Lütfen N ve M değerlerini doldurun");
             return false;
         } catch (Exception ex) {
-            HataBastir("Girebileceğiniz deger maksimum 26 dır");
+            HataBastir("Girebileceğiniz deger maksimum 26 dir");
             return false;
         }
 
@@ -89,14 +99,7 @@ public class Action implements ActionListener, MouseListener {
                         (int) first.getTxtMatris()[i][j].getBounds().getHeight()
                 );
                 second.getTxtMatris()[i][j].setBackground(first.getTxtMatris()[i][j].getBackground());
-                /*
-          
-                    guncelTablo[i][j].setText(guncelTablo[i][j + 1].getText());
-                    width = guncelTablo[i][j + 1].getBounds().getWidth();
-                    height = guncelTablo[i][j + 1].getBounds().getHeight();
-
-                    guncelTablo[i][j].setSize((int) width, (int) height);
-                 */
+         
             }
         }
 
@@ -107,13 +110,8 @@ public class Action implements ActionListener, MouseListener {
         int ikinciSilinecek = 2;
         int firstCounter = 0;
         int secondCounter = 0;
-        // HataBastir("karşılaştırılacak satırlardaki sutunların sayısı : " + (DizideIslemYapılabilecekSutunSayisi(first) - 1 - 1));
-        for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
-            /*System.out.println("i : " + i + " > HATA -> " + first[i].getText().trim());
-            System.out.println("silinen satir sayısı : " + silinenSatir + " / silinen sutun sayısı :" + silinenSutun);
-            System.out.println(" DizideIslemYapılabilecekSatirSayisi(first)-1 :" + (DizideIslemYapılabilecekSatirSayisi(first) - 1));
-             */
-
+         for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+      
             int birinciIndex = Integer.parseInt(guncelTablo[i][firstColumn].getText().trim());
             int ikinciIndex = Integer.parseInt(guncelTablo[i][secondColumn].getText().trim());
             //  HataBastir("BİRİNCİ İNDEXİ GEÇTİK HATA YOK : i:" + i + " birinci  :" + firstColumn + " / ikinci :" + secondColumn);
@@ -130,28 +128,28 @@ public class Action implements ActionListener, MouseListener {
             }
 
         }
-        if (firstCounter == secondCounter) {
-            return 0;
+        if (firstCounter == secondCounter + 1) {
+            return birinciSilinecek;
+        } else if (firstCounter + 1 == secondCounter) {
+            return ikinciSilinecek;
         }
-        if (firstCounter > 0) {
-            return birinciSilinecek; // 1-> ilk dizi ikinciyi kapsar --- ikinci satir silinir
-        }
-        return ikinciSilinecek;  //--- birinci satir silinir
+
+        return 0;
 
     }
 
-    public int SatirKapsamalariIcin2SatırıKarsilastir(JTextField[] first, JTextField[] second) {
+    public int SatirKapsamalariIcin2SatiriKarsilastir(JTextField[] first, JTextField[] second) {
         //  HataBastir("i ->0 : "+first[0].getText()+"j ->0 : "+second[0].getText());
 
         int birIkinciyiKapsar = 1;
         int ikiBirinciyiKapsar = 2;
         int firstCounter = 0;
         int secondCounter = 0;
-        // HataBastir("karşılaştırılacak satırlardaki sutunların sayısı : " + (DizideIslemYapılabilecekSutunSayisi(first) - 1 - 1));
-        for (int i = 1; i < DizideIslemYapılabilecekSutunSayisi(first) - 1; i++) {
+        // HataBastir("karşilaştirilacak satirlardaki sutunlarin sayisi : " + (DizideIslemYapilabilecekSutunSayisi(first) - 1 - 1));
+        for (int i = 1; i < DizideIslemYapilabilecekSutunSayisi(first) - 1; i++) {
             /*  System.out.println("i : " + i + " > HATA -> " + first[i].getText().trim());
-            System.out.println("silinen satir sayısı : " + silinenSatir + " / silinen sutun sayısı :" + silinenSutun);
-            System.out.println(" DizideIslemYapılabilecekSatirSayisi(first)-1 :" + (DizideIslemYapılabilecekSatirSayisi(first) - 1));
+            System.out.println("silinen satir sayisi : " + silinenSatir + " / silinen sutun sayisi :" + silinenSutun);
+            System.out.println(" DizideIslemYapilabilecekSatirSayisi(first)-1 :" + (DizideIslemYapilabilecekSatirSayisi(first) - 1));
              */ int birinciIndex = Integer.parseInt(first[i].getText().trim());
             int ikinciIndex = Integer.parseInt(second[i].getText().trim());
             //  HataBastir("BİRİNCİ İNDEXİ GEÇTİK HATA YOK : i:" + i);
@@ -175,89 +173,79 @@ public class Action implements ActionListener, MouseListener {
     }
 
     public void SatirSil(JTextField[][] guncelTablo, int silinecekSatir) { // silme işlemini null atayarak yapacam
-        //HataBastir("ŞimdiSatırSilinecek");
+        // HataBastir("Silinecek Satir : "+guncelTablo[silinecekSatir][0].getText().trim());
         double width, height; //x, y,
+        AsilTablodaSilinenSatiriBoya(satirIlkIndexStringiBul(guncelTablo, silinecekSatir));
         //  HataBastir("silinecek sutun : "+silinecekSutun);
         // AsilTablodasilinenSutunuBoya(silinecekSatir);//+ silinenSutun
-        HataBastir("silinecek satır : " + guncelTablo[silinecekSatir][0].getText().trim());
-        for (int i = silinecekSatir; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
-            for (int j = 0; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo); j++) {//guncelTablo[i].length - 1 - silinenSutun
+        //HataBastir("silinecek satir : " + guncelTablo[silinecekSatir][0].getText().trim() + " / degeri : " + guncelTablo[silinecekSatir][0].getText().trim());
+        for (int i = silinecekSatir; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+            for (int j = 0; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo); j++) {//guncelTablo[i].length - 1 - silinenSutun
 
                 if (i != guncelTablo.length) { // +1 neden var bilmiyorum !!!
 
                     guncelTablo[i][j].setText(guncelTablo[i + 1][j].getText());
-                    //width = guncelTablo[i][j].getBounds().getWidth(); // siliyorum çünkü son sadece son sutunu diğer sutunlara kaydırırken boyutlar uyuşmuyordu
-                    //height = guncelTablo[i][j].getBounds().getHeight();
+                    guncelTablo[i][j].setBackground(guncelTablo[i + 1][j].getBackground());
 
+                    //width = guncelTablo[i][j].getBounds().getWidth(); // siliyorum çünkü son sadece son sutunu diğer sutunlara kaydirirken boyutlar uyuşmuyordu
+                    //height = guncelTablo[i][j].getBounds().getHeight();
                     //guncelTablo[i][j].setSize((int) width, (int) height);
-                    if (i == DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 2) {//guncelTablo[i].length - 2 - silinenSutun
+                    if (i == DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 2) {//guncelTablo[i].length - 2 - silinenSutun
                         guncelTablo[i + 1][j].setVisible(false);
                     }
 
-                } else {
+                }
+                //    System.out.println("HATA VERİRSE 197 BAK Bİ ORADA ELSEYİ SİLDİM AMA HİÇ GİRMEMİŞTİ ZATEN");
+                /* else {
                     HataBastir("TRUEEE");
                     guncelTablo[i][j].setVisible(false);
-                }
+                }*/
 
             }
 
         }
 
         silinenSatir++;
-        //HataBastir("satır silindi.  --->  silinen satır sayısı : " + silinenSatir);
-
-
-        /* for (int i = 0; i < guncelTablo.length; i++) {
-            guncelTablo[i][silinecekSutun].setText("-1");
-            guncelTablo[i][silinecekSutun].setVisible(false);
-        }*/
-
- /* for (int i = 0; i < guncelTablo.length; i++) {
-            for (int j = 0; j < guncelTablo[i].length; j++) {
-                System.out.println(guncelTablo[i][j]);
-            }
-        }*/
+     
     }
 
     public boolean SatirKapsamaFonk(JTextField[][] guncelTablo) {
-        //  HataBastir("SatırKapsamyagirdik");
-        for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
-            for (int j = 1; j < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; j++) {
+        //  HataBastir("SatirKapsamyagirdik");
+        for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+            for (int j = 1; j < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; j++) {
                 if (i != j) {
-                    //  HataBastir("karşılaştırılacak indexler i :" + i + " --- j :" + j);
-                    int feedback = SatirKapsamalariIcin2SatırıKarsilastir(guncelTablo[i], guncelTablo[j]); // satırları gönderir
+                    //  HataBastir("karşilaştirilacak indexler i :" + i + " --- j :" + j);
+                    int feedback = SatirKapsamalariIcin2SatiriKarsilastir(guncelTablo[i], guncelTablo[j]); // satirlari gönderir
+
+                    String KalacakSatirKarakteri = "";
+                    String SilinecekSatirKarakteri = "";
                     if (feedback == 1) { // 1. kapsar --- ikinci satir silinir
-                        /*  HataBastir("feedback : 1 \n"
+                        /*     HataBastir("feedback : 1 \n"
                                 + "duracak satir birinci satir :" + i
                                 + "silinecek satir ikinci satir : " + j);*/
+                        KalacakSatirKarakteri = satirIlkIndexStringiBul(guncelTablo, i);
+                        SilinecekSatirKarakteri = satirIlkIndexStringiBul(guncelTablo, j);
+                        AsamaBildirimi(KalacakSatirKarakteri + ". satır " + SilinecekSatirKarakteri + ". satırı kapsar");
                         SatirSil(guncelTablo, j);
-                        return IslemYapıldı;
+                        return IslemYapildi;
                     } else if (feedback == 2) { // 2. kapsar --- birinci satir silinir
-                        /*   HataBastir("feedback : 2\n"
+                        /* HataBastir("feedback : 2\n"
                                 + "duracak satir birinci satir :" + j
                                 + "silinecek satir ikinci satir : " + i);*/
+                        KalacakSatirKarakteri = satirIlkIndexStringiBul(guncelTablo, j);
+                        SilinecekSatirKarakteri = satirIlkIndexStringiBul(guncelTablo, i);
+                        AsamaBildirimi(KalacakSatirKarakteri + ". satır " + SilinecekSatirKarakteri + ". satırı kapsar");
                         SatirSil(guncelTablo, i);
 
-                        return IslemYapıldı;
+                        return IslemYapildi;
                     } else {
-                        //HataBastir("birinci satir : :" + i + "ikinci satir :" + j + " --> Silinen olmadı");
+                        //HataBastir("birinci satir : :" + i + "ikinci satir :" + j + " --> Silinen olmadi");
                     }
 
                 }
             }
         }
-        /* yazılacak fonk.'da karşılaştırılan iki satırın sutunlarındaki 1'lerin yeri aynı ise 
-        ve bir tanesinde fazla ise  */
- /*
-        iki satırı burda belirlesem  fonk. atsam ;
-        satırların sutunlarını karşlaştırsam
-        aynı yerde 1'ler; farklı yerde 1'ler;  aynı yerde + fazlası olan 1'ler
-        aynı yerde 1'ler ise fonk false dönsün;
-        diğer 2 seçenekten biri olursa true dönsün;
-        eğer true dönerse  ikinci satır alt satır olur ve o silinir
-         */
-        // islem tamamsa true döner // 
-        // HataBastir("SATIR KAPSAMA BAŞARISIZ --> SUTUN KAPSAMAYA GEÇİLECEKTİR");
+    
         return false;
     }
 
@@ -270,29 +258,33 @@ public class Action implements ActionListener, MouseListener {
     }
 
     public boolean SutunKapsamaFonk(JTextField[][] guncelTablo) {
-        //  HataBastir("islem yapılacak sutun sayısı :" + (DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 2));
-        for (int i = 1; i < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; i++) {
-            for (int j = 1; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {
+        //  HataBastir("islem yapilacak sutun sayisi :" + (DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 2));
+        for (int i = 1; i < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; i++) {
+            for (int j = 1; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {
                 if (i != j) {
-                    System.out.println("i --> last index önemli :" + i);
-                    System.out.println("j --> last index önemli :" + j);
-                    // HataBastir("karşılaştırılacak indexler i :" + i + " --- j :" + j);
-                    int feedback = SutunKapsamalariIcin2SutunuKarsilastir(guncelTablo, i, j); // satırları gönderir
+                    /* System.out.println("i --> last index önemli :" + i);
+                    System.out.println("j --> last index önemli :" + j);*/
+                    // HataBastir("karşilaştirilacak indexler i :" + i + " --- j :" + j);
+                    int feedback = SutunKapsamalariIcin2SutunuKarsilastir(guncelTablo, i, j); // satirlari gönderir
                     if (feedback == 1) { // 1. kapsar --- ikinci satir silinir
                         /*  HataBastir("feedback : 1 \n"
-                                + "duracak satir birinci satir :" + i
-                                + "silinecek satir ikinci satir : " + j);*/
-                        SutunSil(guncelTablo, i);
-                        return IslemYapıldı;
-                    } else if (feedback == 2) { // 2. kapsar --- birinci satir silinir
-                        /* HataBastir("feedback : 2\n"
                                 + "duracak satir birinci satir :" + j
-                                + "silinecek satir ikinci satir : " + i);*/
+                                + "silinecek satir ikinci satir : " + i);
+                        HataBastir("buradan 1 ");*/
+                        AsamaBildirimi(i + ". sutun " + j + ". sutunu kapsar. --> " + i + " sutun silinecek");
+                        SutunSil(guncelTablo, i);
+                        return IslemYapildi;
+                    } else if (feedback == 2) { // 2. kapsar --- birinci satir silinir
+                        /*   HataBastir("feedback : 2\n"
+                                + "duracak satir birinci satir :" + i
+                                + "silinecek satir ikinci satir : " + j);
+                        HataBastir("buradan 2 ");*/
+                        AsamaBildirimi(j + ". sutun " + i + ". sutunu kapsar. --> " + j + " sutun silinecek");
                         SutunSil(guncelTablo, j);
 
-                        return IslemYapıldı;
+                        return IslemYapildi;
                     } else {
-                        //HataBastir("birinci satir : :" + i + "ikinci satir :" + j + " --> Silinen olmadı");
+                        //HataBastir("birinci satir : :" + i + "ikinci satir :" + j + " --> Silinen olmadi");
                     }
 
                 }
@@ -302,177 +294,194 @@ public class Action implements ActionListener, MouseListener {
     }
 
     public void Sutunlardaki_1_OlanSatirlariIsaretle(JTextField[][] guncelTablo, int enDusukSutunAgirligi) {
-
-        for (int j = 1; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {
-            if (Integer.parseInt(
-                    guncelTablo[DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1][j]
+        for (int j = 1; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {//  j=3  -> 2. sutundaki 
+            if (Integer.parseInt( // SA= en düşükse
+                    guncelTablo[DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1][j]
                             .getText().trim()) == enDusukSutunAgirligi) {
-                for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
+                for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {// satırdan başla
 
-                    // i satırının butun j lerini boya  sonra ortak noktasını yeşil yap 
-                    for (int k = 0; k < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; k++) {
-                        if (!guncelTablo[i][k].getText().trim().equals("0")) {
-                            if (guncelTablo[i][k].getBackground() == DusukSutunAgirligiRengi) {
-                                guncelTablo[i][k].setBackground(KesisenIsaretliSutunVeSatirRengi);
-                            } else if (guncelTablo[i][k].getBackground() != KesisenIsaretliSutunVeSatirRengi) {
-                                guncelTablo[i][k].setBackground(IsaretliSutunlarinIsaretlenecekSatirRengi);
-                            }
-                        }
+                    // i satirinin butun j lerini boya  sonra ortak noktasini yeşil yap 
+                    if (guncelTablo[i][j].getText().trim().equals("1")) {
+                        guncelTablo[i][0].setBackground(IsaretliSutunlarinIsaretlenecekSatirRengi);
+                        guncelTablo[i][j].setBackground(KesisenIsaretliSutunVeSatirRengi);
+
                     }
+
                 }
             }
         }
+        
     }
 
-    public void DusukSutunlariIsaretle(JTextField[][] guncelTablo, int enDusukSutunAgirligi) {
-        for (int j = 1; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {
+    public boolean DusukSutunlariIsaretle(JTextField[][] guncelTablo, int enDusukSutunAgirligi) {
+        boolean sutunlarIsaretlendi = false;
+        for (int j = 1; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {
             if (Integer.parseInt(
-                    guncelTablo[DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1][j]
+                    guncelTablo[DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1][j]
                             .getText().trim()) == enDusukSutunAgirligi) {
-                for (int i = 0; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
+                for (int i = 0; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
                     if (!guncelTablo[i][j].getText().trim().equals("0")) {
                         guncelTablo[i][j].setBackground(DusukSutunAgirligiRengi);
+                        sutunlarIsaretlendi = true;
                     }
                 }
             }
         }
+        return sutunlarIsaretlendi;
     }
 
     public void SatirAgirliklariniHesapla(JTextField[][] guncelTablo, int enDusukSutunAgirligi) {
-        /*
-        kb ->kullanabilecek satırların
-        toplam=0;
-        for (i)->{  toplam=0; for(j) ->  { if ((j)-> sa  == dusuk sutun ağırlı) {  [i][j]= 1  olduğu yerde -> toplam+=1/(sutunağırlı) } i-> en sağa toplamı yazdır} 
-        
-         */
+      
         double toplam = 0;
-        for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
+        for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
             toplam = 0;
-            for (int j = 1; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {
+            if (guncelTablo[i][0].getBackground() == IsaretliSutunlarinIsaretlenecekSatirRengi) {
+                for (int j = 1; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {
+                    if (Integer.parseInt(guncelTablo[i][j].getText().trim()) == 1) //enDusukSutunAgirligi ile sutun ağirliği arasinda fark olduğunu sanmiyorum ama diğer türlü yapacam
+                    {
+                        double sutunAgirligi = Double.parseDouble(guncelTablo[DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1][j].getText().trim());
+                        //   HataBastir("i : " + i + " Eklenen sayilar " + (1 / sutunAgirligi));
+                        toplam += 1 / sutunAgirligi;
+                    }
 
-                if (Integer.parseInt(guncelTablo[DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1][j]
-                        .getText().trim()) == enDusukSutunAgirligi
-                        && Integer.parseInt(guncelTablo[i][j].getText().trim()) == 1) {
-                    //enDusukSutunAgirligi ile sutun ağırlığı arasında fark olduğunu sanmıyorum ama diğer türlü yapacam
+                }
+                toplam *= DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 2;
+                if (toplam != 0) {
+                    ;
+                    //guncelTablo[i][DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1].setText();
 
-                    double sutunAgirligi = Double.parseDouble(guncelTablo[DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1][j].getText().trim());
-                    toplam += 1 / sutunAgirligi;
+                    String ToplamText = new DecimalFormat("#.###").format(toplam);//Double.toString(toplam);
+                    ToplamText = ToplamText.replace(',', '.');
+                    guncelTablo[i][DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1].setText(ToplamText);
+                    //   HataBastir("Sonuç :" + toplam);
                 }
             }
-            toplam *= DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 2;
-            guncelTablo[i][DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1].setText(Double.toString(toplam));
+            //  HataBastir("toplam : " + toplam + " / * " + (DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 2));
+
         }
+        
     }
 
     public void EndusukSatirAgiriniSil(JTextField[][] guncelTablo) {
+        //HataBastir("En düşük satır ağırlığı silinecek");
         int dusukSatirAgirininIndexi = 0;
         double satirAgirligiDusukolanSecilecek = Double.MAX_VALUE;
         double satirAgirligi = 0;
-        for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
-            satirAgirligi = Double.parseDouble(guncelTablo[i][DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1].getText().trim());
-            if (satirAgirligiDusukolanSecilecek > satirAgirligi) {
-                satirAgirligiDusukolanSecilecek = satirAgirligi;
-                dusukSatirAgirininIndexi = i;
+        for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+            if (!guncelTablo[i][DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1].getText().trim().equals("")) {
+                satirAgirligi = Double.parseDouble(guncelTablo[i][DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1]
+                        .getText().
+                        trim());
+                if (satirAgirligiDusukolanSecilecek > satirAgirligi) {
+
+                    satirAgirligiDusukolanSecilecek = satirAgirligi;
+                    dusukSatirAgirininIndexi = i;
+                    //HataBastir("Şuanki Seçilen : " + dusukSatirAgirininIndexi);
+                }
+            } else {
+                System.out.println(i + "-) son indexte : " + guncelTablo[i][DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1].getText().trim().equals(""));
             }
         }
+        AsamaBildirimi("Satır Ağırlıkları Hesaplandı." + dusukSatirAgirininIndexi + ". satırın ağırlığı en düşük satır ağırlığı olduğu için silinecek ");
+
         SatirSil(guncelTablo, dusukSatirAgirininIndexi);
     }
 
     public boolean SezgiselAlgoritmaFonk(JTextField[][] guncelTablo) {
-        /*
-        en düşük sutunlarıı bul ve işaretle
-        işaretli sutunların satırlarını işaretle
-        işaretli satırdaki keşisen sutunların 1/(sutun ağırlır)+1/(sutun ağırlır) ... 
-        toplam*=o anki satır ağırlığı
-                
-         */
-        MutlakSatirSutunToplaminiYaz(guncelTablo);// belki bunu silebilirim pek gerek kalmayabilir.
-        int dusukSutunAgirligi
-                = enDusukSutunAgirligiDegeri(
-                        guncelTablo[DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1]
-                );
-        DusukSutunlariIsaretle(guncelTablo, dusukSutunAgirligi);
-        Sutunlardaki_1_OlanSatirlariIsaretle(guncelTablo, dusukSutunAgirligi);
-        SatirAgirliklariniHesapla(guncelTablo, dusukSutunAgirligi);
-        EndusukSatirAgiriniSil(guncelTablo);
+        
+        int dusukSutunAgirligi = enDusukSutunAgirligiDegeri(guncelTablo[DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1]);
+        if (DusukSutunlariIsaretle(guncelTablo, dusukSutunAgirligi)) {
 
-
-        /*,
-        kb ->kullanabilecek satırların
-        toplam=0;
-        for (i)->{  toplam=0; for(j) ->  { if ((j)-> sa  == dusuk sutun ağırlı) {  [i][j]= 1  olduğu yerde -> toplam+=1/(sutunağırlı) } i-> en sağa toplamı yazdır} 
+            Sutunlardaki_1_OlanSatirlariIsaretle(guncelTablo, dusukSutunAgirligi);
+            SatirAgirliklariniHesapla(guncelTablo, dusukSutunAgirligi);
+            EndusukSatirAgiriniSil(guncelTablo);
+            return IslemYapildi;
         }
-        
-        
-        
-        düşük sutunların 1 olduğu satırdaki işaretli satırların
-        satır ağırlığı =  o satırların ()
-         */
-        return IslemYapıldı; // islem tamamsa true döner
+        return false;
+ 
     }
 
-    /* public void SuankiDiziyiBaştanOluşturma_SutunSilme(JTextField[][] guncelTablo, int Satir_Sutun_silindi) {
-        switch (Satir_Sutun_silindi) {
-            case 0: //satır silinmesi
-                break;
-            case 1:// sutun silinmesi
-
-                TablePanel YeniTablo = new TablePanel(pdg.getFrame(),
-                        tabloMatrix.getFrame().getWidth() / 2,
-                        tabloMatrix.getFrame().getHeight() / 2,
-                        tabloMatrix.getFrame().getWidth(),
-                        tabloMatrix.getFrame().getHeight());
-                YeniTablo.TablePanelMatrisOlusturSifirlaBastirma(guncelTablo.length, guncelTablo[0].length - 1);
-                
-                for (int i = 0; i < guncelTablo.length; i++) {
-                    for (int j = 0; j < guncelTablo[i].length - 1; j++) {
-                        YeniTablo.getTxtMatris()[i][j].setText(guncelTablo[i][j].getText());
-                    }
-                    
-                }
-                tabloMatrix.setTxtMatris(YeniTablo.getTxtMatris());
-                break;
-        }
-        
-    }*/
+     
     public void AsilTabladaKirmizilariSiyahaBoya() {
-        System.out.println("KIRMIZILARI SİYAHA BOYA İNAKTİF");
 
-        /*JTextField[][] dizi = pdg.getFrame().getAsilTable().getTxtMatris();
+        JTextField[][] dizi = pdg.getFrame().getAsilTable().getTxtMatris();
         for (int i = 0; i < dizi.length; i++) {
             for (int j = 0; j < dizi[i].length; j++) {
-                if (dizi[i][j].getBackground() == Color.RED) {
-                    dizi[i][j].setBackground(Color.black);
+                if (dizi[i][j].getBackground() == SiliniyorArkaPlanRenk) {
+                    dizi[i][j].setBackground(SilinmisArkaPlanRenk);
+                    dizi[i][j].setForeground(SilinmisinYaziRengi);
+
                 }
 
             }
-        }*/
+        }
     }
 
-    public void AsilTablodasilinenSutunuBoya(int sutun) {
+    public String satirIlkIndexStringiBul(JTextField[][] guncelTablo, int index) {
+        
+        return guncelTablo[index][0].getText().trim();
+    }
+
+    public String sutundakiIlkIndexStringiBul(JTextField[][] guncelTablo, int index) {
+           return guncelTablo[0][index].getText().trim();
+    }
+
+    public int satirIndexiBul(String satirIlkIndexIsmi) {
+        JTextField[][] Dizi = pdg.getFrame().getAsilTable().getTxtMatris();
+        for (int i = 0; i < Dizi.length; i++) {
+            if (Dizi[i][0].getText().trim().equals(satirIlkIndexIsmi)) {
+              return i;
+            }
+          
+        }
+       
+        return 0;
+    }
+
+    public int sutunIndexiBul(String sutunIlkIndexIsmi) {
+        JTextField[][] Dizi = pdg.getFrame().getAsilTable().getTxtMatris();
+        for (int j = 1; j < Dizi.length; j++) {
+            if (Dizi[0][j].getText().trim().equals(sutunIlkIndexIsmi)) {;
+                //      HataBastir("Gelen Sutun ismi : " + sutunIlkIndexIsmi + "/ index :" + j + " dizideki ismi : " + Dizi[0][j].getText().trim());
+                return j;
+            }
+        }
+
+        return 0;
+    }
+
+    public void AsilTablodasilinenSutunuBoya(String sutunIlkIndexIsmi) {
         JTextField[][] dizi = pdg.getFrame().getAsilTable().getTxtMatris();
+        // HataBastir("gelen isim : " + sutunIlkIndexIsmi);
+        int sutun = sutunIndexiBul(sutunIlkIndexIsmi);
+        //  HataBastir("BOYAMA SON AŞAMA SUTUN :" + sutunIlkIndexIsmi + " -> " + sutun);
         for (int i = 0; i < dizi.length; i++) {
-            dizi[i][sutun].setBackground(SiliniyorArkaPlanRenk);
+            if (dizi[i][sutun].getBackground() != SilinmisArkaPlanRenk) {
+                //  HataBastir("sutun boyaniyor :" + i + " / j :" + sutun);
+                dizi[i][sutun].setBackground(SiliniyorArkaPlanRenk);
+                //   dizi[i][sutun].setForeground(SilinmisinYaziRengi);
+            }
 
         }
     }
 
-    public void AsilTablodaSilinenSatiriBoya(int satir) {
+    public void AsilTablodaSilinenSatiriBoya(String SatirIlkIndexIsmi) {
         JTextField[][] dizi = pdg.getFrame().getAsilTable().getTxtMatris();
+        int satir = satirIndexiBul(SatirIlkIndexIsmi);
         for (int i = 0; i < dizi[satir].length; i++) {
-            dizi[satir][i].setBackground(SiliniyorArkaPlanRenk);
+            if (dizi[satir][i].getBackground() != SilinmisArkaPlanRenk) {
+                dizi[satir][i].setBackground(SiliniyorArkaPlanRenk);
+               }
 
         }
     }
 
     public void SutunSil(JTextField[][] guncelTablo, int silinecekSutun) { // silme işlemini null atayarak yapacam
-        //  HataBastir("Silinecek sutun " + silinecekSutun);
-        double width, height; //x, y,
-        //  HataBastir("silinecek sutun : "+silinecekSutun);
-        AsilTablodasilinenSutunuBoya(silinecekSutun);//+ silinenSutun
-        HataBastir("silinecek sutun : " + guncelTablo[0][silinecekSutun].getText().trim());
-        for (int i = 0; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo); i++) {
-            for (int j = silinecekSutun; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {//guncelTablo[i].length - 1 - silinenSutun
+         double width, height; //x, y,
+      
+        AsilTablodasilinenSutunuBoya(sutundakiIlkIndexStringiBul(guncelTablo, silinecekSutun));//+ silinenSutun
+          for (int i = 0; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo); i++) {
+            for (int j = silinecekSutun; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {//guncelTablo[i].length - 1 - silinenSutun
 
                 if (j != guncelTablo[i].length + 1) {
 
@@ -481,95 +490,72 @@ public class Action implements ActionListener, MouseListener {
                     height = guncelTablo[i][j + 1].getBounds().getHeight();
 
                     guncelTablo[i][j].setSize((int) width, (int) height);
-
-                    if (j == DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 2) {//guncelTablo[i].length - 2 - silinenSutun
+                    guncelTablo[i][j].setBackground(guncelTablo[i][j + 1].getBackground());
+                    if (j == DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 2) {//guncelTablo[i].length - 2 - silinenSutun
                         guncelTablo[i][j + 1].setVisible(false);
                         //     HataBastir("Silinen index -> i :" + i + " ; j:" + j);
 
                     }
 
-                } else {
-                    HataBastir("TRUEEE");
-                    guncelTablo[i][j].setVisible(false);
                 }
-
-                /* if (j == guncelTablo[i].length) {
-
-                } else {
-                    HataBastir("j :" + j + " , yeri :" + (guncelTablo[i].length - silinenSutun));
-                }*/
- /* if (j == guncelTablo[i].length - 2 - silinenSutun) {
-                    HataBastir("if te --> " + "hedef : j:" + j + " hesaplanabilen : " + (guncelTablo[i].length - 2 - silinenSutun));
-                    guncelTablo[i][j].setVisible(false);  //  HataBastir("if : uzunluk :" + guncelTablo[i].length + " j :" + j + "\n -(silinenSutun+2)" + (-silinenSutun - 2));
-                } else {
-                    HataBastir("hedef : j:" + j + " hesaplanabilen : " + (guncelTablo[i].length));
-                    //HataBastir("else uzunluk :" + guncelTablo[i].length + ": j :  " + j + "\n -(silinenSutun+2)" + (-silinenSutun - 2));
-                }*/
+  
             }
 
         }
 
         silinenSutun++;
-        //HataBastir("sutun silindi.  --->  silinen sutun sayısı : " + silinenSutun);
-
-        /* for (int i = 0; i < guncelTablo.length; i++) {
-            guncelTablo[i][silinecekSutun].setText("-1");
-            guncelTablo[i][silinecekSutun].setVisible(false);
-        }*/
-
- /* for (int i = 0; i < guncelTablo.length; i++) {
-            for (int j = 0; j < guncelTablo[i].length; j++) {
-                System.out.println(guncelTablo[i][j]);
-            }
-        }*/
+     
     }
     int SAYAC = 0;
 
-    public int DizideIslemYapılabilecekSatirSayisi(JTextField[] guncelTablo) {
+    public int DizideIslemYapilabilecekSatirSayisi(JTextField[] guncelTablo) {
         return guncelTablo.length - silinenSatir;
     }
 
-    public int DizideIslemYapılabilecekSatirSayisi(JTextField[][] guncelTablo) {
+    public int DizideIslemYapilabilecekSatirSayisi(JTextField[][] guncelTablo) {
         return guncelTablo.length - silinenSatir;
     }
 
-    public int DizideIslemYapılabilecekSutunSayisi(JTextField[] guncelTablo) {
+    public int DizideIslemYapilabilecekSutunSayisi(JTextField[] guncelTablo) {
         return guncelTablo.length - silinenSutun;
     }
 
-    public int DizideIslemYapılabilecekSutunSayisi(JTextField[][] guncelTablo) {
+    public int DizideIslemYapilabilecekSutunSayisi(JTextField[][] guncelTablo) {
         return guncelTablo[0].length - silinenSutun;
     }
 
     public void MutlakSatirdaElemeIslemi(JTextField[][] guncelTablo, int sutun) {
 
-// şimdi hangi satırda 1 ise  o satırı bulup
-// aynı satırda 1 olan tüm sutunları silecez
-        int satir = 0;
-        for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo); i++) {//guncelTablo.length - silinenSatir
+      int satir = 0;
+        for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo); i++) {//guncelTablo.length - silinenSatir
             if (Integer.parseInt(guncelTablo[i][sutun].getText()) == 1) {
 
                 satir = i;
-                //   HataBastir("satır belirlendi satır : " + satir + "/ sutun :" + sutun);
-                break;
+                 break;
             }
         }
-        //HataBastir("Belirnen satır :" + satir);
-        for (int i = 1; i < DizideIslemYapılabilecekSutunSayisi(guncelTablo); i++) {//guncelTablo[satir].length - silinenSutun
+         for (int i = 1; i < DizideIslemYapilabilecekSutunSayisi(guncelTablo); i++) {//guncelTablo[satir].length - silinenSutun
 
-            /*(guncelTablo[satir][i].getBackground() != Color.RED
-                    || guncelTablo[satir][i].getBackground() != Color.black)
-                    &&*/
+            
             if (guncelTablo[satir][i].getText().trim().equals("1")) { // degeri 1 ise o sutunu sil
-                //   HataBastir("aynı satırdaki sutundaki 1 lerin kontrolu -> i :" + i + " / satir :" + satir);
-                // HataBastir("satırdaki : " + satir + " sutun silinecek :" + i);
+              
+                String satirKarakteri = satirIlkIndexStringiBul(guncelTablo, satir);
+                String sutunKarakteri = sutundakiIlkIndexStringiBul(guncelTablo, i);
+                AsamaBildirimi(satirKarakteri + ". satir  Mutlak Satır olduğundan " + sutunKarakteri + ". sutunu siler");
                 SutunSil(guncelTablo, i);
-                // AsilTablodaSilinenSatiriBoya(satir+);
-                i--;
-                //  HataBastir("sutun silindi");
+             
+                i--; ;
 
             }
         }
+        String bosluk = " ";
+        if (virgulEkle) {
+            bosluk = ", ";
+        } else {
+            virgulEkle = true;
+        }
+
+        pdg.getLblKapsamalar().setText(pdg.getLblKapsamalar().getText().trim() + bosluk + guncelTablo[satir][0].getText().trim());
         SatirSil(guncelTablo, satir);
     }
 
@@ -578,8 +564,8 @@ public class Action implements ActionListener, MouseListener {
         for (int i = 1; i < guncelTablo[0].length - 1; i++) {
             if (guncelTablo[guncelTablo.length - silinenSatir - 1][i].getText().trim().equals("1")) {
 
-                MutlakSatirdaElemeIslemi(guncelTablo, i);// i -> ağırlığı = 1 olan sutun
-                return IslemYapıldı;
+                MutlakSatirdaElemeIslemi(guncelTablo, i);// i -> ağirliği = 1 olan sutun
+                return IslemYapildi;
             }
 
         }
@@ -587,13 +573,13 @@ public class Action implements ActionListener, MouseListener {
     }
 
     public void MutlakSatirSutunToplaminiYaz(JTextField[][] guncelTablo) {
-        // HataBastir("Sutun toplamları yazılacak");
+        // HataBastir("Sutun toplamlari yazilacak");
 
         int Sutundaki_1_lerinToplami = 0;
-        int sutunSayisi = guncelTablo[0].length - 1;// -1 ağırlık kısmınn alınmaması için
-        for (int sayac = 1; sayac < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; sayac++) {
-            for (int i = 1; i < DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1; i++) {
-                for (int j = 0; j < DizideIslemYapılabilecekSutunSayisi(guncelTablo) - 1; j++) {//guncelTablo[i].length - 1 - silinenSutun
+        int sutunSayisi = guncelTablo[0].length - 1;// -1 ağirlik kisminn alinmamasi için
+        for (int sayac = 1; sayac < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; sayac++) {
+            for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+                for (int j = 0; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {//guncelTablo[i].length - 1 - silinenSutun
 
                     if (sayac == j
                             && guncelTablo[i][j] != null
@@ -605,7 +591,7 @@ public class Action implements ActionListener, MouseListener {
                 }
             }
 
-            guncelTablo[DizideIslemYapılabilecekSatirSayisi(guncelTablo) - 1][sayac].
+            guncelTablo[DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1][sayac].
                     setText(Integer.toString(Sutundaki_1_lerinToplami));
             Sutundaki_1_lerinToplami = 0;
 
@@ -635,7 +621,7 @@ public class Action implements ActionListener, MouseListener {
             for (int j = 1; j < dizi[i].length - 1; j++) {
                 if (dizi[i][j].getText().trim().equals("1")) {
                     HataBastir("i :" + i + "j : " + j);
-                    MutlakSatirAsilTablo_boyanacakSutunlariBelirle(dizi, i);// i -> ağırlığı = 1 olan sutun
+                    MutlakSatirAsilTablo_boyanacakSutunlariBelirle(dizi, i);// i -> ağirliği = 1 olan sutun
 
                 }
             }
@@ -650,19 +636,10 @@ public class Action implements ActionListener, MouseListener {
         if (MutlakSatirdaElemeFonk(guncelTablo)) {
             return true;
         }
-        //   MutlakSatirSutunToplaminiYaz(pdg.getFrame().getAsilTable().getTxtMatris());     
-        //     MutlakSatirdaBoyamaAsilTablo(); 
 
         return false; // islem tamamsa true döner
     }
 
-    /* public boolean matrixIndexIslemYapilabilir(JTextField index) {
-        if (index.getBackground() != SiliniyorArkaPlanRenk
-                || index.getBackground() != SilinmisArkaPlanRenk) {
-            return true;
-        }
-        return false;
-    }*/
     public void diziBastir(JTextField[][] guncelTablo) {
         System.out.println("*******************************************");
         for (int i = 0; i < guncelTablo.length; i++) {
@@ -670,65 +647,143 @@ public class Action implements ActionListener, MouseListener {
             if (!guncelTablo[i][0].getText().trim().equals(guncelTablo[i][guncelTablo[i].length - 1].getText().trim())) {
                 for (int j = 0; j < guncelTablo[i].length; j++) {
 
-                    System.out.print("[" + i + "][" + j + "] = " + guncelTablo[i][j].getText().trim() + "  ");
-
-                }
-                System.out.println("");
+                        } 
             }
         }
     }
 
-    public void islemler(JTextField[][] guncelTablo, int islem) {
+    public void SatirAgirliklariniTemizle(JTextField[][] guncelTablo) {
+        for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+            guncelTablo[i][DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1].setText("");
+        }
+    }
 
-        //HataBastir("silinen Satır sayısı : " + silinenSatir);
-        //  HataBastir("silinen Sutun sayısı : " + silinenSutun);
-        // diziBastir(guncelTablo);
-        MutlakSatirSutunToplaminiYaz(guncelTablo);
-        EskiTabloyuGuncelle(pdg.getFrame().getSuankiTable(),
+    public void tablonunBoyalariniTemizle(JTextField[][] guncelTablo) {
+        for (int i = 0; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo); i++) {
+            for (int j = 0; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo); j++) {
+                guncelTablo[i][j].setBackground(Color.WHITE);
+                }
+        }
+    }
+
+    public void islemlerIleri(JTextField[][] guncelTablo, int islem) {
+
+          EskiTabloyuGuncelle(pdg.getFrame().getSuankiTable(),
                 pdg.getFrame().getOncekiTable());
+        TabloyaCekiDuzenVer(guncelTablo);
+        MutlakSatirSutunToplaminiYaz(guncelTablo);
+
         switch (islem) {
             case MUTLAK_SATIR:
                 if (MutlakSatirFonk(guncelTablo)) {
+                    HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
                     return;
                 }
-            /* if (MutlakSatirFonk(guncelTablo)) {
-                    diziBastir(guncelTablo);
-                    return; // MutlakSatırda işlem yapıldıysa bitir
-                }*/
+
             case SATIR_KAPSAMA:
 
                 if (SatirKapsamaFonk(guncelTablo)) {
-
+                    HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
                     return;
                 }
-            /* if (SatirKapsamaFonk(guncelTablo)) {
-                    return; // MutlakSatırda işlem yapıldıysa bitir
-                }*/
+
             case SUTUN_KAPSAMA:
-                // HataBastir("Sutun Kapsamasına giriyoruz");
                 if (SutunKapsamaFonk(guncelTablo)) {
-                    return; // MutlakSatırda işlem yapıldıysa bitir
+                    HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
+                    return;
                 }
             case SEZGIZSEL_ALGORITMA:
-                /*
-                1-)ilk başta sutun ağırlıkları hesaplanacak
-                2-) ardından
-                 */
-                HataBastir("Sezgisele giriyoruz");
                 if (SezgiselAlgoritmaFonk(guncelTablo)) {
-                    return; // MutlakSatırda işlem yapıldıysa bitir
+                    HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
+                    return;
                 } else {
-                    HataBastir("İşlemler Tamamlanmıştır");
+                    HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
+                    HataBastir("İşlemler Tamamlanmiştir");
+                    pdg.getBtnGoResult().setEnabled(false);
+                    pdg.getBtnStartOrNext().setEnabled(false);
+
                 }
         }
-        MutlakSatirSutunToplaminiYaz(guncelTablo); // işlem bitince sutun ağırlıklarını günceller
+        MutlakSatirSutunToplaminiYaz(guncelTablo); // işlem bitince sutun ağirliklarini günceller
 
     }
 
+    public void islemlerSonuc(JTextField[][] guncelTablo, int islem) {
+        AsilTabladaKirmizilariSiyahaBoya();
+        EskiTabloyuGuncelle(pdg.getFrame().getSuankiTable(),
+                pdg.getFrame().getOncekiTable());
+        TabloyaCekiDuzenVer(guncelTablo);
+
+        SatirAgirliklariniTemizle(guncelTablo);
+        switch (islem) {
+            case MUTLAK_SATIR:
+                if (MutlakSatirFonk(guncelTablo)) {
+                       islemlerSonuc(guncelTablo, MUTLAK_SATIR);
+                    return;
+                }
+
+            case SATIR_KAPSAMA:
+
+                if (SatirKapsamaFonk(guncelTablo)) {
+                       islemlerSonuc(guncelTablo, MUTLAK_SATIR);
+                    return;
+                }
+
+            case SUTUN_KAPSAMA:
+                if (SutunKapsamaFonk(guncelTablo)) {
+                         islemlerSonuc(guncelTablo, MUTLAK_SATIR);
+                    return;
+                }
+            case SEZGIZSEL_ALGORITMA:
+                if (SezgiselAlgoritmaFonk(guncelTablo)) {
+                        islemlerSonuc(guncelTablo, MUTLAK_SATIR);
+                    return;
+                } else {
+                    HataBastir("İşlemler Tamamlanmiştir");
+                    pdg.getBtnGoResult().setEnabled(false);
+                    pdg.getBtnStartOrNext().setEnabled(false);
+                    return;
+                }
+        }
+        MutlakSatirSutunToplaminiYaz(guncelTablo);  
+
+    }
+
+    public void HicDegerGirilmeyenSatirSutunVarsaSil(JTextField[][] guncelTablo) {
+        boolean SatirDaDegerVar = false;
+        boolean SutunDaDegerVar = false;
+
+        for (int i = 1; i < DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1; i++) {
+            SatirDaDegerVar = false;
+            for (int j = 1; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {
+                if (Integer.parseInt(guncelTablo[i][j].getText().trim()) == 1) {
+                    SatirDaDegerVar = true;
+                }
+                }
+            if (SatirDaDegerVar == false) {
+                   SatirSil(guncelTablo, i);
+                HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
+            }
+        }
+        MutlakSatirSutunToplaminiYaz(guncelTablo);
+
+        for (int j = 1; j < DizideIslemYapilabilecekSutunSayisi(guncelTablo) - 1; j++) {
+            if (Integer.parseInt(guncelTablo[DizideIslemYapilabilecekSatirSayisi(guncelTablo) - 1][j].getText().trim()) == 0) {
+                  SutunSil(guncelTablo, j);
+                HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
+            }
+        }
+    }
+
+    public void TabloyaCekiDuzenVer(JTextField[][] guncelTablo) {
+        tablonunBoyalariniTemizle(guncelTablo);
+        HicDegerGirilmeyenSatirSutunVarsaSil(guncelTablo);
+        SatirAgirliklariniTemizle(guncelTablo);
+    }
+
     public int enDusukSutunAgirligiDegeri(JTextField[] sonsatir) {
-        HataBastir("ilk index : " + sonsatir[0].getText().trim());
-        int dusukDeger = Integer.MAX_VALUE;
-        for (int i = 1; i < DizideIslemYapılabilecekSutunSayisi(sonsatir) - 1; i++) {
+          int dusukDeger = Integer.MAX_VALUE;
+        for (int i = 1; i < DizideIslemYapilabilecekSutunSayisi(sonsatir) - 1; i++) {
             if (dusukDeger > Integer.parseInt(sonsatir[i].getText().trim())) {
                 dusukDeger = Integer.parseInt(sonsatir[i].getText().trim());
             }
@@ -738,10 +793,7 @@ public class Action implements ActionListener, MouseListener {
 
     public void SonrakiAdimaIlerlemeFonksiyonu(JTextField[][] guncelTablo) {
 
-        islemler(guncelTablo, MUTLAK_SATIR);
-    }
-
-    public void YeniTabloyuGuncelle() {
+        islemlerIleri(guncelTablo, MUTLAK_SATIR);
     }
 
     @Override
@@ -759,7 +811,7 @@ public class Action implements ActionListener, MouseListener {
                 //pdg.getLblMDegeri().setEnabled(false);
                 pdg.getBtnOlustur().setEnabled(false);
                 pdg.getBtnStartOrNext().setEnabled(true);
-                pdg.getBtnGoResult().setEnabled(true);
+
                 pdg.getBtnRestart().setEnabled(true);
 
                 pdg.getFrame().getAsilTable().TablePanelMatrisOlustur(
@@ -768,24 +820,28 @@ public class Action implements ActionListener, MouseListener {
 
                 pdg.setAsilTabloDegerDegistirme(true);
 
-            } else if (pdg.isAsilTabloDegerDegistirme() == true // deger değiştirme açıkken ve ilerle butonuna dönüşmemiş se ilerleye dönüştüriyoruz
-                    && e.getSource() == pdg.getBtnStartOrNext()) {
+            } else if (pdg.isAsilTabloDegerDegistirme() == true      && e.getSource() == pdg.getBtnStartOrNext()) {
                 pdg.getFrame().AddOtheTablesToFrame(pdg.getFrame().getAsilTable().getTxtMatris());
                 pdg.setAsilTabloDegerDegistirme(false);
                 pdg.getBtnStartOrNext().setText(btnNameNext);
-            }/* else if (pdg.isIlerle() == true //ilerle butonu açıksa her bastığında bir sonraki işleme geçecek
-                    && e.getSource() == pdg.getBtnStartOrNext()) {
-            }*/
-            if (pdg.isAsilTabloDegerDegistirme() == false
-                    && e.getSource() == pdg.getBtnStartOrNext()) {
-                AsilTabladaKirmizilariSiyahaBoya();
-                //MutlakSatirSutunToplaminiYaz(pdg.getFrame().getSuankiTable().getTxtMatris());
+            }
+            if (pdg.isAsilTabloDegerDegistirme() == false) {
 
-                SonrakiAdimaIlerlemeFonksiyonu(pdg.getFrame().getSuankiTable().getTxtMatris());
+                if (e.getSource() == pdg.getBtnStartOrNext()) {
+                    pdg.getBtnGoResult().setEnabled(true);
+                    pdg.getFrame().getAsilTable().getPanelBaslik().setLocation(pdg.getFrame().getAsilTable().getWidth() / 3, pdg.getFrame().getAsilTable().getWidth() / 60);
+                    pdg.getFrame().getOncekiTable().getPanelBaslik().setLocation(pdg.getFrame().getOncekiTable().getWidth() / 3, pdg.getFrame().getOncekiTable().getWidth() / 60);
+                    pdg.getFrame().getSuankiTable().getPanelBaslik().setLocation(pdg.getFrame().getSuankiTable().getWidth() / 3, pdg.getFrame().getSuankiTable().getWidth() / 60);
+                    AsilTabladaKirmizilariSiyahaBoya();
+                    SonrakiAdimaIlerlemeFonksiyonu(pdg.getFrame().getSuankiTable().getTxtMatris());
+                    HataBastir("boyut :" + pdg.getFrame().getWidth() / 2);
 
-                /* pdg.getFrame().getSuankiTable().setVisible(false);
-                pdg.getFrame().getSuankiTable().setVisible(true);*/
-            } else if (e.getSource() == pdg.getBtnRestart()) {
+                } else if (e.getSource() == pdg.getBtnGoResult()) {
+                    islemlerSonuc(pdg.getFrame().getSuankiTable().getTxtMatris(), MUTLAK_SATIR);
+
+                }
+            }
+            if (e.getSource() == pdg.getBtnRestart()) {
 
                 pdg.getFrame().getjFrame().setVisible(false);
                 new Frame();
@@ -803,13 +859,8 @@ public class Action implements ActionListener, MouseListener {
                     if (i > 0 && j > 0) {
 
                         if (e.getSource() == tabloMatrix.getTxtMatris()[i][j]) {
-                            if (Integer.parseInt(tabloMatrix.getTxtMatris()[i][j].getText()) == 1) {
-                                tabloMatrix.getTxtMatris()[i][j].setText("0");
-
-                            } else if (Integer.parseInt(tabloMatrix.getTxtMatris()[i][j].getText()) == 0) {
-                                tabloMatrix.getTxtMatris()[i][j].setText("1");
-                            }
-                            /*if (ClickCounter[0] == i && ClickCounter[1] == j) {
+                        
+                            if (ClickCounter[0] == i && ClickCounter[1] == j) {
                                 ClickCounter[2]++;
                                 if (ClickCounter[2] == 2) {
                                     if (Integer.parseInt(tabloMatrix.getTxtMatris()[i][j].getText()) == 1) {
@@ -827,7 +878,7 @@ public class Action implements ActionListener, MouseListener {
                                 ClickCounter[1] = j;
                                 ClickCounter[2] = 1;
                                 brimBoyama(Color.CYAN, tabloMatrix.getTxtMatris()[i][j]);
-                            }*/
+                            }
                         }
                     }
                 }
@@ -838,6 +889,10 @@ public class Action implements ActionListener, MouseListener {
 
     public void brimBoyama(Color color, JTextField alan) {
         alan.setBackground(color);
+    }
+
+    public void brimYazi(Color color, JTextField alan) {
+        alan.setForeground(color);
     }
 
     @Override
@@ -854,15 +909,16 @@ public class Action implements ActionListener, MouseListener {
         for (int i = 0; i < tabloMatrix.getTxtMatris().length; i++) {
             for (int j = 0; j < tabloMatrix.getTxtMatris()[i].length; j++) {
                 if (e.getSource() == tabloMatrix.getTxtMatris()[i][j]) {
-                    oncedenBoyanmis = tabloMatrix.getTxtMatris()[i][j].getBackground();
+                    oncedenBoyanmisArkaPlan = tabloMatrix.getTxtMatris()[i][j].getBackground();
+                    oncedenBoyanmisYaziRengi = tabloMatrix.getTxtMatris()[i][j].getForeground();
                     brimBoyama(Color.GREEN, tabloMatrix.getTxtMatris()[i][j]);
-
+                    brimYazi(SiyahYaziRengi, tabloMatrix.getTxtMatris()[i][j]);
                 }
             }
         }
     }
 
-    @Override
+    @Override/*
     public void mouseExited(MouseEvent e) {
         for (int i = 0; i < tabloMatrix.getTxtMatris().length; i++) {
             for (int j = 0; j < tabloMatrix.getTxtMatris()[i].length; j++) {
@@ -878,16 +934,18 @@ public class Action implements ActionListener, MouseListener {
                 }
             }
         }
-    }
-    /*  public void mouseExited(MouseEvent e) {
+    }*/
+    public void mouseExited(MouseEvent e) {
         for (int i = 0; i < tabloMatrix.getTxtMatris().length; i++) {
             for (int j = 0; j < tabloMatrix.getTxtMatris()[i].length; j++) {
                 if (e.getSource() == tabloMatrix.getTxtMatris()[i][j]) {
 
-                    brimBoyama(oncedenBoyanmis, tabloMatrix.getTxtMatris()[i][j]);
+                    brimBoyama(oncedenBoyanmisArkaPlan, tabloMatrix.getTxtMatris()[i][j]);
+                    brimYazi(oncedenBoyanmisYaziRengi, tabloMatrix.getTxtMatris()[i][j]);
+
                 }
             }
         }
-    }*/
+    }
 
 }
