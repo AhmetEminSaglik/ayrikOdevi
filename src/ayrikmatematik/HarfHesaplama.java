@@ -1,7 +1,5 @@
 package ayrikmatematik;
 
-import javax.swing.JOptionPane;
-
 public class HarfHesaplama {
 
     String alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -12,12 +10,11 @@ public class HarfHesaplama {
     }
 
     public String SatiraYazilacak(int index) {
-     //   System.out.println("index -->" + index);
+
         String text = "";
         if (index < 26) {
+
             text += KarakterHesapla(index);
-        } else {
-            JOptionPane.showMessageDialog(null, "Satır Sayımızıın ismi en fazla 26 olabilir ");
         }
         /*
         } else {

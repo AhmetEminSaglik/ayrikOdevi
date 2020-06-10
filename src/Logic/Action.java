@@ -62,7 +62,7 @@ public class Action implements ActionListener, MouseListener {
     
     public boolean InputIntegerControl(String InputTextforInteger) {
         try {
-            if (Integer.parseInt(InputTextforInteger) > 26) {
+            if (Integer.parseInt(InputTextforInteger) > 25) {
                 throw new Exception();
             }
         } catch (NumberFormatException e) {
@@ -72,10 +72,10 @@ public class Action implements ActionListener, MouseListener {
             HataBastir("Lütfen N ve M değerlerini doldurun");
             return false;
         } catch (Exception ex) {
-            HataBastir("Girebileceğiniz deger maksimum 26 dir");
+            HataBastir("Girebileceğiniz deger maksimum 25 dir");
             return false;
         }
-        
+
         return true;
     }
     
@@ -440,7 +440,8 @@ public class Action implements ActionListener, MouseListener {
     public int sutunIndexiBul(String sutunIlkIndexIsmi) {
         //HataBastir("gelen String :"+sutunIlkIndexIsmi);
         JTextField[][] Dizi = pdg.getFrame().getAsilTable().getTxtMatris();
-        for (int j = 1; j < Dizi[0].length; j++) {
+        for (int j = 1; j < Dizi[0]
+                .length; j++) {
             if (Dizi[0][j].getText().trim().equals(sutunIlkIndexIsmi)) {;
                 //      HataBastir("Gelen Sutun ismi : " + sutunIlkIndexIsmi + "/ index :" + j + " dizideki ismi : " + Dizi[0][j].getText().trim());
                 return j;
@@ -454,7 +455,7 @@ public class Action implements ActionListener, MouseListener {
         JTextField[][] dizi = pdg.getFrame().getAsilTable().getTxtMatris();
         // HataBastir("gelen isim : " + sutunIlkIndexIsmi);
         int sutun = sutunIndexiBul(sutunIlkIndexIsmi);
-        HataBastir("boyama aşaması : " + sutun);
+        //HataBastir("boyama aşaması : " + sutun);
         //  HataBastir("BOYAMA SON AŞAMA SUTUN :" + sutunIlkIndexIsmi + " -> " + sutun);
         for (int i = 0; i < dizi.length; i++) {
             if (dizi[i][sutun].getBackground() != SilinmisArkaPlanRenk) {
